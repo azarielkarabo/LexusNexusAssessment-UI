@@ -48,20 +48,6 @@ import { CreateCategoryAction, CreateCategorySuccessAction } from 'src/ngxs-stor
                 matTooltip="Add subcategory">
           <mat-icon>add_circle_outline</mat-icon>
         </button>
-        
-        <button mat-icon-button 
-                (click)="editCategory(); $event.stopPropagation()" 
-                class="action-btn"
-                matTooltip="Edit category">
-          <mat-icon>edit</mat-icon>
-        </button>
-        
-        <button mat-icon-button 
-                (click)="deleteCategory($event)" 
-                class="action-btn delete-btn"
-                matTooltip="Delete category">
-          <mat-icon>delete_outline</mat-icon>
-        </button>
       </div>
     </div>
 
@@ -114,8 +100,6 @@ export class CategoryTreeNodeComponent {
   }
 
   addSubcategory(parentCategory: CategoryDto | null = null): void {
-    debugger
-
     const dialogRef = this.dialog.open(CreateCategoryDialogComponent, {
       width: '600px',
       data: { parentCategory }

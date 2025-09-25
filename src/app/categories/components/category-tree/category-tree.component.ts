@@ -109,7 +109,6 @@ export class CategoryTreeComponent {
   }
 
   openAddDialog(parentCategory: CategoryDto | null = null): void {
-    debugger
     const dialogRef = this.dialog.open(CreateCategoryDialogComponent, {
       width: '600px',
       data: { parentCategory }

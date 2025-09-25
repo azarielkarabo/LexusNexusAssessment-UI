@@ -2,14 +2,23 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Select, Store } from "@ngxs/store";
 import { Observable } from "rxjs";
 import { ProductDto, ProductSearchResultDto, CreateProductDto, UpdateProductDto } from "src/models/product-models";
-import { 
-    LoadPagedProductsAction, 
-    CreateProductAction, 
-    UpdateProductAction, 
-    DeleteProductAction 
+import {
+  LoadPagedProductsAction,
+  CreateProductAction,
+  UpdateProductAction,
+  DeleteProductAction
 } from "src/ngxs-store/product-store/product.actions";
 import { ProductState } from "src/ngxs-store/product-store/product.state";
 import { TableService } from "src/serivces/table.services";
+
+interface SearchModel {
+  searchTerm?: string;
+  sortBy?: string;
+  sortDirection?: string;
+  pageSize: number;
+  currentPage: number;
+  categoryId?: number;
+}
 
 @Component({
   selector: 'app-product-list-page',
@@ -37,26 +46,47 @@ export class ProductListPageComponent {
     const pageEvent = this.tableService.getPageEvent();
     this.store.dispatch(new LoadPagedProductsAction({
       pageSize: pageEvent.pageSize,
-      page: pageEvent.pageIndex 
+      page: pageEvent.pageIndex , // Convert to 1-based indexing,
+      searchTerm: undefined
     }));
   }
 
-  loadPagedProducts(model: any) {
-    this.store.dispatch(new LoadPagedProductsAction({ 
-      pageSize: model.pageSize, 
-      page: model.currentPage 
-    }));
+  loadPagedProducts(model: SearchModel) {
+    // Build the action payload with all search parameters
+    const actionPayload: any = {
+      pageSize: model.pageSize,
+      page: model.currentPage
+    };
+
+    // Only add parameters if they have values
+    if (model.searchTerm && model.searchTerm.trim()) {
+      actionPayload.searchTerm = model.searchTerm.trim();
+    }
+
+    if (model.sortBy) {
+      actionPayload.sortBy = model.sortBy;
+    }
+
+    if (model.sortDirection) {
+      actionPayload.sortDirection = model.sortDirection;
+    }
+
+    if (model.categoryId) {
+      actionPayload.categoryId = model.categoryId;
+    }
+
+    this.store.dispatch(new LoadPagedProductsAction(actionPayload));
   }
 
   createProduct(dto: CreateProductDto) {
     this.store.dispatch(new CreateProductAction({ dto }));
   }
 
-  updateProduct(dto: UpdateProductDto & { id: number }) {
-    this.store.dispatch(new UpdateProductAction({ id: dto.id, dto }));
+  updateProduct(data: { dto: UpdateProductDto, id: number }) {
+    this.store.dispatch(new UpdateProductAction({ id: data.id, dto: data.dto }));
   }
 
-  deleteProduct(id: any) {
+  deleteProduct(id: number) {
     this.store.dispatch(new DeleteProductAction({ id }));
   }
 }

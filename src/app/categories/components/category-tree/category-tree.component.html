@@ -72,21 +72,7 @@
                   style="background-color: pink !important;"
                   matTooltip="Add subcategory">
             <mat-icon>add_circle_outline</mat-icon>
-          </button>
-          
-          <button mat-icon-button 
-                  (click)="onEditCategory(node); $event.stopPropagation()" 
-                  class="action-btn"
-                  matTooltip="Edit category">
-            <mat-icon>edit</mat-icon>
-          </button>
-          
-          <button mat-icon-button 
-                  (click)="onDeleteCategory(node.id, $event)" 
-                  class="action-btn delete-btn"
-                  matTooltip="Delete category">
-            <mat-icon>delete_outline</mat-icon>
-          </button>
+          </button>   
         </div>
       </mat-tree-node>
 
@@ -107,20 +93,6 @@
                   class="action-btn"
                   matTooltip="Add subcategory">
             <mat-icon>add_circle_outline</mat-icon>
-          </button>
-          
-          <button mat-icon-button 
-                  (click)="onEditCategory(node); $event.stopPropagation()" 
-                  class="action-btn"
-                  matTooltip="Edit category">
-            <mat-icon>edit</mat-icon>
-          </button>
-          
-          <button mat-icon-button 
-                  (click)="onDeleteCategory(node.id, $event)" 
-                  class="action-btn delete-btn"
-                  matTooltip="Delete category">
-            <mat-icon>delete_outline</mat-icon>
           </button>
         </div>
       </mat-tree-node>

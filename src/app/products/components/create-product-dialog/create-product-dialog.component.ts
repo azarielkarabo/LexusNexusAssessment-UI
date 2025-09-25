@@ -23,7 +23,7 @@ export class CreateProductDialogComponent {
       sku: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       price: [0, [Validators.required, Validators.min(0.01)]],
       quantity: [0, [Validators.required, Validators.min(0)]],
-      categoryId: [null, [Validators.required, Validators.min(1)]]
+      categoryId: [null]
     });
   }
 
