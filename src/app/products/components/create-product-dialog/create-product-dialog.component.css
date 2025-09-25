@@ -1,0 +1,46 @@
+/* create-product-dialog.component.css */
+
+/* Dialog background */
+.mat-dialog-container {
+  background-color: #2c2c2c; 
+  color: #ffffff;
+  border-radius: 12px;
+}
+
+/* Form fields */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+mat-label {
+  color: #e0e0e0;
+}
+
+/* Inputs and textarea */
+input.mat-input-element,
+textarea.mat-input-element {
+  color: #ffffff;
+  background-color: #424242;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button[mat-button] {
+  color: #ffffff;
+}
+
+button[mat-raised-button] {
+  background-color: #d32f2f;
+  color: #ffffff;
+}
+
+button[mat-raised-button]:hover {
+  background-color: #b71c1c;
+}
+
+/* Dialog title */
+h2.mat-dialog-title {
+  color: #ffffff;
+  font-weight: 600;
+}
