@@ -16,22 +16,24 @@ export class UpdateProductDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<UpdateProductDialogComponent>,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: ProductDto
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    const product = data.product as ProductDto;
     this.form = this.fb.group({
-      name: [data.name, Validators.required],
-      description: [data.description],
-      sku: [data.sku, Validators.required],
-      price: [data.price, Validators.required],
-      quantity: [data.quantity, Validators.required],
-      categoryId: [data.categoryId, Validators.required]
+      name: [product.name, Validators.required],
+      description: [product.description],
+      sku: [product.sku, Validators.required],
+      price: [product.price, Validators.required],
+      quantity: [product.quantity, Validators.required],
+      categoryId: [product.categoryId, Validators.required]
     });
   }
 
   save() {
     if (this.form.valid) {
+      
       const model = (this.form.value as UpdateProductDto);
-      this.updateProductClick.emit({ id: this.data.id, ...model });
+      this.updateProductClick.emit({ id: this.data.product.id, ...model });
     }
   }
 

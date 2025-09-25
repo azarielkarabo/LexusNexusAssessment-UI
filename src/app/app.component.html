@@ -1,2 +1,71 @@
-<app-product-list-page>
-</app-product-list-page>
+<!-- Main Layout Container -->
+<mat-sidenav-container class="app-container" hasBackdrop="false">
+
+  <!-- Side Navigation -->
+  <mat-sidenav #sidenav class="app-sidenav" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)" [fixedInViewport]="true" [fixedTopGap]="0" [fixedBottomGap]="0">
+
+    <!-- Sidenav Header -->
+    <div class="sidenav-header">
+      <div class="brand-container">
+        <div class="brand-info">
+          <h2 class="brand-title"> <mat-icon>store</mat-icon>Lexis Nexis</h2>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="navigation-menu">
+      <div class="menu-section">
+        <mat-list class="nav-list">
+          <mat-list-item *ngFor="let item of navigationItems" class="nav-item"
+            [class.active]="isRouteActive(item.route)" (click)="navigate(item.route)">
+
+            <div matLine class="nav-content">
+              <span class="nav-label"> <mat-icon matListIcon class="nav-icon">{{ item.icon }}</mat-icon> {{ item.label
+                }}</span>
+            </div>
+
+            <!-- Active indicator -->
+            <div *ngIf="isRouteActive(item.route)" class="active-indicator"></div>
+
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </nav>
+
+  </mat-sidenav>
+
+  <!-- Main Content Area -->
+  <mat-sidenav-content class="app-content">
+
+    <!-- Top Toolbar -->
+    <mat-toolbar class="app-toolbar" color="primary">
+
+      <!-- Menu Toggle Button (Mobile) -->
+      <button mat-icon-button class="menu-toggle-btn" (click)="toggleSidenav()" *ngIf="isHandset$ | async">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <!-- Page Title Section -->
+      <div class="toolbar-title-section">
+        <h1 class="page-title">{{ getPageTitle() }}</h1>
+        <span class="page-description">{{ getPageDescription() }}</span>
+      </div>
+
+      <!-- Spacer -->
+      <span class="toolbar-spacer"></span>
+
+    </mat-toolbar>
+
+    <!-- Page Content -->
+    <main class="page-content">
+      <div class="content-container">
+        <!-- Router Outlet - Your page components will load here -->
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

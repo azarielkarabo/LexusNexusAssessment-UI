@@ -1,45 +1,39 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CreateProductDto } from 'src/models/product-models';
+import { CreateCategoryDto } from 'src/models/category-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-create-product-dialog',
-  templateUrl: './create-product-dialog.component.html',
-  styleUrls: ['./create-product-dialog.component.css']
+  selector: 'app-create-category-dialog',
+  templateUrl: './create-category-dialog.component.html',
+  styleUrls: ['./create-category-dialog.component.css']
 })
-export class CreateProductDialogComponent {
+export class CreateCategoryDialogComponent {
   form: FormGroup;
-  @Output() createProductClick = new EventEmitter<CreateProductDto>();
+  @Output() createCategoryClick = new EventEmitter<CreateCategoryDto>();
 
   constructor(
-    public dialogRef: MatDialogRef<CreateProductDialogComponent>,
+    public dialogRef: MatDialogRef<CreateCategoryDialogComponent>,
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       description: ['', [Validators.maxLength(500)]],
-      sku: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      price: [0, [Validators.required, Validators.min(0.01)]],
-      quantity: [0, [Validators.required, Validators.min(0)]],
-      categoryId: [null, [Validators.required, Validators.min(1)]]
+      parentCategoryId: [data?.parentCategory?.id, [Validators.min(1)]] // optional but must be > 0 if provided
     });
   }
 
   save(): void {
     if (this.form.valid) {
       const formValue = this.form.value;
-      const model: CreateProductDto = {
+      const model: CreateCategoryDto = {
         name: formValue.name?.trim(),
         description: formValue.description?.trim() || '',
-        sku: formValue.sku?.trim(),
-        price: Number(formValue.price),
-        quantity: Number(formValue.quantity),
-        categoryId: Number(formValue.categoryId)
+        parentCategoryId: formValue.parentCategoryId ? Number(formValue.parentCategoryId) : null
       };
-      
-      this.createProductClick.emit(model);
+
+      this.createCategoryClick.emit(model);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.form.controls).forEach(key => {
@@ -71,17 +65,16 @@ export class CreateProductDialogComponent {
     if (field.hasError('required')) {
       return `${this.getFieldLabel(fieldName)} is required`;
     }
-    if (field.hasError('minLength')) {
-      const requiredLength = field.errors?.['minLength'].requiredLength;
+    if (field.hasError('minlength')) {
+      const requiredLength = field.errors?.['minlength'].requiredLength;
       return `${this.getFieldLabel(fieldName)} must be at least ${requiredLength} characters`;
     }
-    if (field.hasError('maxLength')) {
-      const requiredLength = field.errors?.['maxLength'].requiredLength;
+    if (field.hasError('maxlength')) {
+      const requiredLength = field.errors?.['maxlength'].requiredLength;
       return `${this.getFieldLabel(fieldName)} must not exceed ${requiredLength} characters`;
     }
     if (field.hasError('min')) {
-      const minValue = field.errors?.['min'].min;
-      return `${this.getFieldLabel(fieldName)} must be at least ${minValue}`;
+      return `${this.getFieldLabel(fieldName)} must be greater than 0`;
     }
 
     return '';
@@ -91,10 +84,7 @@ export class CreateProductDialogComponent {
     const labels: { [key: string]: string } = {
       name: 'Name',
       description: 'Description',
-      sku: 'SKU',
-      price: 'Price',
-      quantity: 'Quantity',
-      categoryId: 'Category ID'
+      parentCategoryId: 'Parent Category'
     };
     return labels[fieldName] || fieldName;
   }

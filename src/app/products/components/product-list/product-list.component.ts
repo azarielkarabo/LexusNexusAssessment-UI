@@ -7,6 +7,7 @@ import { ProductDto, ProductSearchResultDto, CreateProductDto, UpdateProductDto 
 import { CreateProductSuccessAction, UpdateProductAction, UpdateProductSuccessAction } from 'src/ngxs-store/product-store/product.actions';
 import { CreateProductDialogComponent } from '../create-product-dialog/create-product-dialog.component';
 import { UpdateProductDialogComponent } from '../update-product-dialog/update-product-dialog.component';
+import { DeleteProductDialogComponent } from '../delete-product-dialog/delete-product-dialog.component';
 
 @Component({
   selector: 'app-product-list',
@@ -48,8 +49,8 @@ export class ProductListComponent implements OnChanges {
   }
 
   openAddDialog(): void {
-    debugger
-    const dialogRef = this.dialog.open(CreateProductDialogComponent, { width: '600px' });
+    
+    const dialogRef = this.dialog.open(CreateProductDialogComponent, { width: '900px' });
 
     dialogRef.componentInstance.createProductClick.subscribe((dto: CreateProductDto) => {
       this.createProductClick.emit(dto);
@@ -60,12 +61,14 @@ export class ProductListComponent implements OnChanges {
   }
 
   openEditDialog(product: ProductDto): void {
+    
     const dialogRef = this.dialog.open(UpdateProductDialogComponent, {
-      width: '600px',
+      width: '900px',
       data: { product }
     });
 
     dialogRef.componentInstance.updateProductClick.subscribe((dto: UpdateProductDto & { id: number }) => {
+      
       this.store.dispatch(new UpdateProductAction({ dto, id: dto.id }));
       this.editProductClick.emit({ dto, id: dto.id });
       this.actions$
@@ -75,6 +78,12 @@ export class ProductListComponent implements OnChanges {
   }
 
   delete(product: ProductDto): void {
-    this.deleteProductClick.emit(product.id);
+    const dialogRef = this.dialog.open(DeleteProductDialogComponent, {
+      width: '900px'
+    });
+
+    dialogRef.componentInstance.confirmClick.subscribe(() => {
+      this.deleteProductClick.emit(product.id);
+    });
   }
 }

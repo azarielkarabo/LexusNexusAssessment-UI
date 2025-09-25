@@ -12,7 +12,7 @@ export class CreateCategoryDto {
   constructor(
     public name: string,
     public description?: string,
-    public parentCategoryId?: number
+    public parentCategoryId?: number|null
   ) {}
 }
 
