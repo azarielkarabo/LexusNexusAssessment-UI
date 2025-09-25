@@ -18,6 +18,7 @@ import { MatTreeModule } from "@angular/material/tree";
 import { MaterialModule } from "src/material/material-module";
 import { NgxsStoreModule } from "src/ngxs-store/ngxs-store.module";
 import { CommonModule } from "@angular/common";
+import { CategoryTreeNodeComponent } from './components/category-tree-node/category-tree-node.component';
 
 @NgModule({
     imports: [CategoryRoutingModule,
@@ -36,7 +37,7 @@ import { CommonModule } from "@angular/common";
         MatTreeModule,
         MaterialModule,
         NgxsStoreModule],
-    declarations: [CategoryTreePageComponent, CategoryTreeComponent, CreateCategoryDialogComponent],
+    declarations: [CategoryTreePageComponent, CategoryTreeComponent, CreateCategoryDialogComponent, CategoryTreeNodeComponent],
     exports: [],
     providers: [CategoriesApiService]
 })

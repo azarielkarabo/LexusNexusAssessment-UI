@@ -1,33 +1,129 @@
 <div class="category-tree-container">
-  <div class="tree-actions">
+  <!-- Header with actions -->
+  <div class="tree-header">
+    <h3 class="tree-title">
+      <mat-icon>category</mat-icon>
+      Product Categories
+    </h3>
+    <div class="tree-actions">
+      <button mat-stroked-button (click)="expandAll()" class="action-btn">
+        <mat-icon>unfold_more</mat-icon>
+        Expand All
+      </button>
+      <button mat-stroked-button (click)="collapseAll()" class="action-btn">
+        <mat-icon>unfold_less</mat-icon>
+        Collapse All
+      </button>
+      <button mat-raised-button color="primary" (click)="openAddDialog()" class="primary-action-btn">
+        <mat-icon>add</mat-icon>
+        Add Category
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading categories...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && (!categories || categories.length === 0)" class="empty-state">
+    <mat-icon class="empty-icon">category</mat-icon>
+    <h4>No categories yet</h4>
+    <p>Create your first category to get started</p>
     <button mat-raised-button color="primary" (click)="openAddDialog()">
       <mat-icon>add</mat-icon>
-      Capture Category
+      Create First Category
     </button>
   </div>
 
-  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="category-tree">
-    <!-- Parent nodes with children -->
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-      <button mat-icon-button matTreeNodeToggle 
-              [attr.aria-label]="'Toggle ' + node.name">
-        <mat-icon class="mat-icon-rtl-mirror">
-          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-        </mat-icon>
-      </button>
-      <span class="node-name">{{node.name}}</span>
-      <button mat-icon-button (click)="openAddDialog(node)" class="add-btn">
-        <mat-icon>add_circle_outline</mat-icon>
-      </button>
-    </mat-tree-node>
+  <!-- Category tree -->
+  <div *ngIf="!isLoading && categories && categories.length > 0" class="tree-container">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="category-tree">
+      
+      <!-- Parent nodes with children -->
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" 
+                     matTreeNodePadding 
+                     class="tree-node parent-node">
+        
+        <button mat-icon-button 
+                matTreeNodeToggle
+                [attr.aria-label]="'Toggle ' + node.name"
+                class="toggle-btn">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        
+        <mat-icon class="category-icon">folder</mat-icon>
+        
+        <span class="node-name">{{node.name}}</span>
+        
+        <!-- Fixed: Use consistent property name and method -->
+        <span class="node-badge" *ngIf="getChildCount(node) > 0">
+          {{getChildCount(node)}}
+        </span>
+        
+        <div class="node-actions">
+          <button mat-icon-button 
+                  (click)="openAddDialog(node); $event.stopPropagation()" 
+                  class="action-btn"
+                  style="background-color: pink !important;"
+                  matTooltip="Add subcategory">
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+          
+          <button mat-icon-button 
+                  (click)="onEditCategory(node); $event.stopPropagation()" 
+                  class="action-btn"
+                  matTooltip="Edit category">
+            <mat-icon>edit</mat-icon>
+          </button>
+          
+          <button mat-icon-button 
+                  (click)="onDeleteCategory(node.id, $event)" 
+                  class="action-btn delete-btn"
+                  matTooltip="Delete category">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </mat-tree-node>
 
-    <!-- Leaf nodes without children -->
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-      <button mat-icon-button disabled></button>
-      <span class="node-name">{{node.name}}</span>
-      <button mat-icon-button (click)="openAddDialog(node)" class="add-btn">
-        <mat-icon>add_circle_outline</mat-icon>
-      </button>
-    </mat-tree-node>
-  </mat-tree>
+      <!-- Leaf nodes without children -->
+      <mat-tree-node *matTreeNodeDef="let node" 
+                     matTreeNodePadding 
+                     class="tree-node leaf-node">
+        
+        <div class="toggle-btn-spacer"></div>
+        
+        <mat-icon class="category-icon">label</mat-icon>
+        
+        <span class="node-name">{{node.name}}</span>
+        
+        <div class="node-actions">
+          <button mat-icon-button 
+                  (click)="openAddDialog(node); $event.stopPropagation()" 
+                  class="action-btn"
+                  matTooltip="Add subcategory">
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+          
+          <button mat-icon-button 
+                  (click)="onEditCategory(node); $event.stopPropagation()" 
+                  class="action-btn"
+                  matTooltip="Edit category">
+            <mat-icon>edit</mat-icon>
+          </button>
+          
+          <button mat-icon-button 
+                  (click)="onDeleteCategory(node.id, $event)" 
+                  class="action-btn delete-btn"
+                  matTooltip="Delete category">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </mat-tree-node>
+    </mat-tree>
+  </div>
 </div>
